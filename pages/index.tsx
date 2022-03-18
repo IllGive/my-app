@@ -16,6 +16,7 @@ import {
 
 let selectedValue: number;
 let size: number | undefined = undefined;
+let gameState;
 
 export default function Home() {
   const router = useRouter()
@@ -36,10 +37,14 @@ export default function Home() {
   const [started, setStarted] = useState(undefined)
   const [finished, setFinished] = useState(false);
   const [finishedfr, setFinishedfr] = useState(false);
+  const [gameLost, setGameLost] = useState(false);
+  const [gameLostfr, setGameLostfr] = useState(false);
   const [cols, setCols] = useState<undefined | number>(undefined);
   const [pressed, setPressed] = useState("");
   const [row, setRow] = useState(0); //current row the game is on
-  const [tiles, setTiles] = useState<String[][]>([[], [], [], [], [], [], []]);
+  const [tiles, setTiles] = useState<String[][]>([[], [], [], [], [], []]);
+
+// need to fix a bug where the array destroys itself
 
   // const test = [["a", "b", "c", "d", "e"], ["f", "g", "h", "i", "j"], ["K", "l", "m", "n", "o"]]
   useEffect(() => {
@@ -90,9 +95,19 @@ export default function Home() {
             <button onClick={() => {setFinished(false); setFinishedfr(true)}} className="rounded-lg ring-yellow-500/50 hover:bg-yellow-500/5 transition ring-1 text-white text- font-medium uppercase py-2 px-6 mx-auto mt-4">Close</button>
           </div>
         </div>
+        {/* Surely I can just copy and paste this! */}
+        <div className={"inset-0 bg-white/5 backdrop-blur-sm absolute z-10 flex items-center justify-center " + (gameLost ? "" : "hidden")}>
+          <div className="rounded-lg bg-neutral-900 border backdrop-blur-md border-white/5 p-8 flex flex-col my-auto">
+            <h2 className="text-2xl font-semibold text-center">You lost!</h2>
+            <p className="text-gray-300 text-center mb-12 mt-2">Word: Word</p>
+            <button onClick={() => router.reload()} className="rounded-lg bg-green-600 hover:bg-green-700 transition text-white text-xl font-medium uppercase py-3 px-6 mx-auto shadow-md shadow-green-600/10">Play Again</button>
+            <button onClick={() => {setGameLost(false); setGameLostfr(true)}} className="rounded-lg ring-yellow-500/50 hover:bg-yellow-500/5 transition ring-1 text-white text- font-medium uppercase py-2 px-6 mx-auto mt-4">Close</button>
+          </div>
+        </div>
         <h1 className="text-7xl font-bold mx-auto mb-4 relative tracking-wider ">
           Bordle!
         </h1>
+         {/* I was thinking that perhaps either side of the bar, we could put he number of letters */}
         <hr className={"w-36 border-t-2  mx-auto mb-6 " + (cols ? "border-green-500" : "border-blue-500") } />
 
         <div className="md:space-x-4 mx-auto " id="dropDownMenu">
@@ -150,7 +165,7 @@ export default function Home() {
         </div>
         {finishedfr ? 
         <button onClick={() => router.reload()} className="mt-8 rounded-lg bg-green-600 hover:bg-green-700 transition text-white text-xl font-medium uppercase py-3 px-6 mx-auto shadow-md shadow-green-600/10">Play Again</button> : ""}
-        <div className="grid-cols-2 grid-cols-3 grid-cols-4 grid-cols-3 grid-cols-4 grid-cols-5 grid-cols-6 grid-cols-7 grid-cols-8 grid-cols-9 grid-cols-10 grid-cols-11 grid-cols-12"></div>
+        <div className="grid-cols-2 grid-cols-3 grid-cols-4 grid-cols-5 grid-cols-6 grid-cols-7 grid-cols-8 grid-cols-9 grid-cols-10 grid-cols-11 grid-cols-12"></div>
         <div className="mt-auto mx-auto"></div>
       </div>
     </>
@@ -160,11 +175,15 @@ export default function Home() {
     
     if (size == undefined) return;
 
+    console.log(tiles, "handleguess");
     const test: String[][] = [];
     for (let i = 0; i < tiles.length; i++) {
       test.push(tiles[i]);
     }
+    console.log(myRow);
     let r = test[myRow];
+    console.log(test);
+    console.log(r);
     console.log(size);
     // Removed || inputtedLetter == "Enter" because it could interfere with stuff
     if (
@@ -183,16 +202,19 @@ export default function Home() {
       r.length == size &&
       isGuessValid(r.join(""))
     ) {
-      console.log("worked");
+      //console.log("worked");
       const t = doRound(r.join(""), tiles, myRow);
       setTiles(t);
-      console.log(t)
       newRow(myRow + 1);
-      console.log(row);
-      if (t.pop()[0] == "won") {
-        setFinished(true)
+      gameState = t.pop()[0];
+      if (gameState == "won") {
+        setFinished(true);
+      } else if (gameState == "lost") {
+        setGameLost(true);
+        //NEED TO FIX THIS LATER
+
       }
-      
+      t.push([]);
     }
 
     //console.log(y);

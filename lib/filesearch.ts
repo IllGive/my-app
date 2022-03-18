@@ -52,15 +52,18 @@ function refillUnscoredLetters(chosenWord) {
   console.log(unscoredLetters);
 }
 
-export function arrMessWith(v: String[][], row, won: boolean) {
+export function arrMessWith(v: String[][], row, won: boolean, lost: boolean) {
   console.log("arrMessWith called");
   console.log(indexesToBeScored);
   console.log(lettersToBeScored);
+  console.log(v);
   for (let i = 0; i < indexesToBeScored.length; i++) {
     v[row][indexesToBeScored[i]] = lettersToBeScored[i];
     console.log('An attempt was made');
   }
   if (won) v.push(["won"]);
+  if (lost) v.push(["lost"]);
+  //console.log(v);
   return v;
 }
 
@@ -153,21 +156,25 @@ export function doRound(guess: string, tiles: String[][], row: number): String[]
   if (guess == chosenWord) gameWon = true;   
   console.log(gameWon);
   if(tries > 0) {
+    tries--;
     refillUnscoredLetters(chosenWord);
     emptyScoredLetters();
-    tries--;
     checkForGreenLetters(chosenWord, guess);
     checkForYellowLetters(chosenWord, guess);
+    console.log(tries);
     console.log(chosenWord, guess);
     if (gameWon == true) {
-      return arrMessWith(tiles, row, true)
+      return arrMessWith(tiles, row, true, false);
+    }else if (tries < 1) {
+      return arrMessWith(tiles, row, false, true);
     }else {
-      return arrMessWith(tiles, row, false);
+      return arrMessWith(tiles, row, false, false);
     }
+  }else if (tries < 1) {
+    //return arrMessWith(tiles, row, false, true);
+    console.log("this was called");
   }
   
-  
-   
 }
 
 
