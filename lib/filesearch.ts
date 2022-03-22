@@ -12,7 +12,7 @@ var unscoredLetters: Array<string> = [];
 export let gameWon: boolean = false;
 let tries: number = 6;
 //let testOutput: Array<string>;
-let chosenWord: string;
+export let chosenWord: string;
 let indexesToBeScored: Array<number> = [];
 let lettersToBeScored: Array<string> = [];
 //export let charsOnKeyboard: Array<string> = []; 
@@ -52,7 +52,7 @@ function refillUnscoredLetters(chosenWord) {
   console.log(unscoredLetters);
 }
 
-export function arrMessWith(v: String[][], row, won: boolean, lost: boolean) {
+export function arrMessWith(v: String[][], row: number, won: boolean, lost: boolean) {
   console.log("arrMessWith called");
   console.log(indexesToBeScored);
   console.log(lettersToBeScored);
@@ -66,6 +66,28 @@ export function arrMessWith(v: String[][], row, won: boolean, lost: boolean) {
   //console.log(v);
   return v;
 }
+
+export function markInvalidGuess (v: String[][], row: number, markOrErase: boolean) {
+  if (markOrErase) {
+    for (let charPosInGuess = 0; charPosInGuess < v[row].length; charPosInGuess++) {
+      if (v[row][charPosInGuess].length < 2) {
+        v[row][charPosInGuess] += ":r";
+      }
+    }
+  } else if (!markOrErase) {
+    for (let charPosInGuess = 0; charPosInGuess < v[row].length; charPosInGuess++) {
+      v[row][charPosInGuess][1] == "";
+      v[row][charPosInGuess][2] == "";
+    }
+  }
+  return v;
+}
+
+// export function clearInvalidMarking (v: String[][], row: number) {
+//   for (let charPosInGuess = 0; charPosInGuess < v[row].length; charPosInGuess++) {
+//     v[row][charPosInGuess] = v[row][charPosInGuess][0];
+//   }
+// }
 
 function emptyScoredLetters() {
   indexesToBeScored.splice(0, 100);
@@ -153,8 +175,9 @@ export function startGame(numLetters: Number) {
 //call on valid guess entered
 export function doRound(guess: string, tiles: String[][], row: number): String[][] {
 
-  if (guess == chosenWord) gameWon = true;   
-  console.log(gameWon);
+  if (guess == chosenWord) gameWon = true;
+  else gameWon = false;
+  //console.log(gameWon);
   if(tries > 0) {
     tries--;
     refillUnscoredLetters(chosenWord);

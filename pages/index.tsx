@@ -1,3 +1,5 @@
+//CSS AND HTML BY LUKAS
+
 import Head from "next/head";
 import { useRouter } from "next/router";
 //import Image from "next/image";
@@ -6,6 +8,9 @@ import {
   doRound,
   startGame,
   isGuessValid,
+  markInvalidGuess,
+  chosenWord,
+  //clearInvalidMarking,
   gameWon /*lettersToBeScored, indexesToBeScored*/,
 } from "../lib/filesearch";
 //import { Formik, Field, Form } from "formik";
@@ -14,8 +19,9 @@ import {
 
 //let guess: string;
 
+var myRow = 0;
 let selectedValue: number;
-let size: number | undefined = undefined;
+let size: number/* | undefined = undefined*/;
 let gameState;
 
 export default function Home() {
@@ -24,7 +30,7 @@ export default function Home() {
     const selectElement = document.querySelector("#numLetters");
     //@ts-expect-error
     const output = selectElement.value;
-    console.log(output);
+    //console.log(output);
     size = output ?? 6;
     setCols(output);
     document.getElementById("dropDownMenu").hidden = true;
@@ -32,15 +38,14 @@ export default function Home() {
     startGame(output);
     setTimeout(function () {}, 10000);
   }
-
-  var myRow = 0;
-  const [started, setStarted] = useState(undefined)
+  
+  
+  //var myRow = 0;
   const [finished, setFinished] = useState(false);
   const [finishedfr, setFinishedfr] = useState(false);
   const [gameLost, setGameLost] = useState(false);
   const [gameLostfr, setGameLostfr] = useState(false);
   const [cols, setCols] = useState<undefined | number>(undefined);
-  const [pressed, setPressed] = useState("");
   const [row, setRow] = useState(0); //current row the game is on
   const [tiles, setTiles] = useState<String[][]>([[], [], [], [], [], []]);
 
@@ -49,9 +54,10 @@ export default function Home() {
   // const test = [["a", "b", "c", "d", "e"], ["f", "g", "h", "i", "j"], ["K", "l", "m", "n", "o"]]
   useEffect(() => {
     window.addEventListener("keydown", (e) => {
-      setPressed(e.key);
+      //console.log(e.key)
+      //if (gameState != "lost") return;
       handleGuess(e.key, size);
-      setStarted(true);
+      
     });
   }, []);
 
@@ -86,11 +92,11 @@ export default function Home() {
         />
         <meta name="theme-color" content="#ffffff" />
       </Head>
-      <div className="bg-black min-h-screen text-gray-100 flex flex-col  py-10 px-2 md:px-10 relative">
+      <div className="bg-black min-h-screen text-gray-100 flex flex-col  pt-10 px-2 md:px-10 relative">
         <div className={"inset-0 bg-white/5 backdrop-blur-sm absolute z-10 flex items-center justify-center " + (finished ? "" : "hidden")}>
           <div className="rounded-lg bg-neutral-900 border backdrop-blur-md border-white/5 p-8 flex flex-col my-auto">
             <h2 className="text-2xl font-semibold text-center">Bordle Finished!</h2>
-            <p className="text-gray-300 text-center mb-12 mt-2">Word: Word</p>
+            <p className="text-gray-300 text-center mb-12 mt-2" id="displayWord_won">Word: Word</p>
             <button onClick={() => router.reload()} className="rounded-lg bg-green-600 hover:bg-green-700 transition text-white text-xl font-medium uppercase py-3 px-6 mx-auto shadow-md shadow-green-600/10">Play Again</button>
             <button onClick={() => {setFinished(false); setFinishedfr(true)}} className="rounded-lg ring-yellow-500/50 hover:bg-yellow-500/5 transition ring-1 text-white text- font-medium uppercase py-2 px-6 mx-auto mt-4">Close</button>
           </div>
@@ -99,7 +105,7 @@ export default function Home() {
         <div className={"inset-0 bg-white/5 backdrop-blur-sm absolute z-10 flex items-center justify-center " + (gameLost ? "" : "hidden")}>
           <div className="rounded-lg bg-neutral-900 border backdrop-blur-md border-white/5 p-8 flex flex-col my-auto">
             <h2 className="text-2xl font-semibold text-center text-red-600">You lost!</h2>
-            <p className="text-gray-300 text-center mb-12 mt-2">Word: Word</p>
+            <p className="text-gray-300 text-center mb-12 mt-2" id="displayWord_lost">Word: Word</p>
             <button onClick={() => router.reload()} className="rounded-lg bg-green-600 hover:bg-green-700 transition text-white text-xl font-medium uppercase py-3 px-6 mx-auto shadow-md shadow-green-600/10">Play Again</button>
             <button onClick={() => {setGameLost(false); setGameLostfr(true)}} className="rounded-lg ring-yellow-500/50 hover:bg-yellow-500/5 transition ring-1 text-white text- font-medium uppercase py-2 px-6 mx-auto mt-4">Close</button>
           </div>
@@ -139,13 +145,14 @@ export default function Home() {
 
         {/* <input id="txtInput1" type="text" /> */}
         {/* We need to be able to easily change this grid-cols-5 value! */}
-        <div className={"grid mx-auto w-full  gap-1 md:gap-4 grid-cols-" + cols + (cols > 8 ? " lg:w-auto" : " md:w-auto")}>
+        <div className={"grid mx-auto w-full gap-1 md:gap-4 select-none grid-cols-" + cols + (cols > 8 ? " lg:w-auto" : " md:w-auto")}>
           {tiles.map((value) =>
             value.map((value2) => (
               value2 == "won" ? 
               ""
               :
               <div
+                
                 //key={value2}
                 className={
                   "rounded-lg text-center text-3xl font-medium uppercase py-4  " +
@@ -153,7 +160,9 @@ export default function Home() {
                     ? "bg-green-500"
                     : value2.endsWith(":y")
                     ? "bg-yellow-500"
-                    : "bg-neutral-900")
+                    : value2.endsWith(":r")
+                    ? "bg-neutral-900"
+                    : "bg-neutral-900/75")
                   + (cols > 8 ? " md:px-4 xl:px-8 " : "  md:px-8")
                 }
               >
@@ -163,18 +172,70 @@ export default function Home() {
           )}
           {/*console.log(tiles)*/}
         </div>
-        {finishedfr ? 
+        {finishedfr || gameLostfr ?
         <button onClick={() => router.reload()} className="mt-8 rounded-lg bg-green-600 hover:bg-green-700 transition text-white text-xl font-medium uppercase py-3 px-6 mx-auto shadow-md shadow-green-600/10">Play Again</button> : ""}
         <div className="grid-cols-2 grid-cols-3 grid-cols-4 grid-cols-5 grid-cols-6 grid-cols-7 grid-cols-8 grid-cols-9 grid-cols-10 grid-cols-11 grid-cols-12"></div>
-        <div className="mt-auto mx-auto"></div>
+        <div className="mt-auto mx-auto">
+          <div className="flex flex-col justify-center rounded-t-lg bg-neutral-900/25 border backdrop-blur-md border-white/5 pb-2 pt-6 px-6">
+            <div className="grid gap-2 grid-cols-10 mb-2">
+            {
+              "qwertyuiop".split("").map((value) => (
+                <button
+                  onClick={() => {handleGuess(value, size); console.log(value, size) }}
+                  key={value}
+                  className="rounded-lg text-center text-3xl font-medium uppercase py-2 bg-neutral-900/75 border-white hover:ring-1 transition duration-300 px-3"
+                >{value}</button>
+              ))
+            }
+            </div>
+            <div className="grid gap-2 grid-cols-9 mb-2">
+            {
+              "asdfghjkl".split("").map((value) => (
+                <button
+                onClick={() => handleGuess(value, size)}
+                  key={value}
+                  className="rounded-lg text-center text-3xl font-medium uppercase py-2 bg-neutral-900/25 border-white/5 hover:ring-1 transition duration-300 px-3"
+                >{value}</button>
+              ))
+            }
+            </div>
+            <div className="grid gap-2 grid-cols-7 mb-2">
+            {
+              "zxcvbnm".split("").map((value) => (
+                <button
+                onClick={() => handleGuess(value, size)}
+                  key={value}
+                  className="rounded-lg text-center text-3xl font-medium uppercase py-2 bg-neutral-900/25 border-white/5 hover:ring-1 transition duration-300 px-3"
+                >{value}</button>
+              ))
+            }
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+            <button
+                  onClick={() => {console.log(size, myRow, "|"), handleGuess("Return", size, myRow)}}
+                  className="rounded-lg text-center text-3xl font-medium uppercase py-1  px-3 hover:ring-1 transition duration-300 bg-neutral-900/25 border-white/5"
+                >Enter</button>
+                <button
+                  onClick={() => {handleGuess("Backspace", size)}}
+                  className="rounded-lg text-center text-3xl font-medium uppercase  px-3 hover:ring-1 transition duration-300 bg-neutral-900/25 border-white/5"
+                >Backspace</button>
+            </div>
+          </div>
+        </div>
       </div>
+      
     </>
   );
 
-  function handleGuess(inputtedLetter: string, sizeT: number) {
+  function handleGuess(inputtedLetter: string, handleGuess_size: number, handleGuess_row?: number) {
     
-    if (size == undefined) return;
-
+    console.log(inputtedLetter, handleGuess_size, handleGuess_row);
+    if (handleGuess_row != undefined) {
+      myRow = handleGuess_row;
+    }
+    console.log("guess handled");
+    //if (handleGuess_size == undefined) return;
+    
     console.log(tiles, "handleguess");
     const test: String[][] = [];
     for (let i = 0; i < tiles.length; i++) {
@@ -184,38 +245,53 @@ export default function Home() {
     let r = test[myRow];
     console.log(test);
     console.log(r);
-    console.log(size);
+    console.log(handleGuess_size);
     // Removed || inputtedLetter == "Enter" because it could interfere with stuff
     if (
       inputtedLetter != "Backspace" &&
       inputtedLetter != "Delete" &&
+      inputtedLetter != "Enter" &&
+      inputtedLetter != "Return" &&
       inputtedLetter.toLowerCase().match("^[a-z]{1}$") &&
       gameWon == false &&
-      r.length < size
+      gameState != "lost" &&
+      r.length < handleGuess_size
     ) {
       r.push(inputtedLetter.toLowerCase());
       console.log(r);
     } else if (inputtedLetter == "Backspace" || inputtedLetter == "Delete") {
       r.pop();
+      // const t = markInvalidGuess(tiles, myRow, false)
+      // setTiles(t);
     } else if (
       (inputtedLetter == "Enter" || inputtedLetter == "Return") &&
-      r.length == size &&
+      r.length == handleGuess_size &&
       isGuessValid(r.join(""))
     ) {
       //console.log("worked");
+      console.log("Enter key detected");
+      console.log(r, myRow);
       const t = doRound(r.join(""), tiles, myRow);
       setTiles(t);
+      console.log(t);
+      console.log(myRow);
       newRow(myRow + 1);
+      console.log(myRow);
       gameState = t.pop()[0];
       if (gameState == "won") {
         setFinished(true);
+        document.getElementById("displayWord_won").innerHTML = "Word: " + chosenWord;
       } else if (gameState == "lost") {
         setGameLost(true);
-        //NEED TO FIX THIS LATER
-
-      }
+        document.getElementById("displayWord_lost").innerHTML = "Word: " + chosenWord;
+        //NEED TO FIX THIS LATER, You can still type after you have lost for whatever reason
+      } 
       t.push([]);
+      // } else if (r.length == handleGuess_size && !isGuessValid(r.join(""))) {
+      // const t = markInvalidGuess(tiles, myRow, true)
+      // setTiles(t);
     }
+    console.log("ran through conditions in handleGuess");
 
     //console.log(y);
     //test.push(r);
@@ -223,10 +299,16 @@ export default function Home() {
     //console.log(tiles);
   }
 
+  // Egregious violation of DRY, but here we go:
+
+  // function handleGuessOnScreen (inputtedLetter: string; size: number) {
+
+  // }
+
   function newRow(line: number) {
     setRow(line);
     myRow = line;
-    console.log(line);
-    console.log(row);
+    //console.log(line);
+    //console.log(row);
   }
 }
