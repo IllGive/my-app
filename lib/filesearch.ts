@@ -17,6 +17,9 @@ let indexesToBeScored: Array<number> = [];
 let lettersToBeScored: Array<string> = [];
 //export let charsOnKeyboard: Array<string> = []; 
 let indexesToBeScoredIncrement: Number;
+let greenLetters: Array<string> = [];
+let yellowLetters: Array<string> = [];
+let blackLetters: Array<string> = [];
 
 
 // I need to take in guesses                          MOSTLY DONE
@@ -119,6 +122,7 @@ function checkForGreenLetters(chosenWord, guess) {
   for (let charPosInGuess = 0; charPosInGuess < guess.length; charPosInGuess++) {
     if (guess[charPosInGuess] == chosenWord[charPosInGuess] && isLetterPresent(guess[charPosInGuess])) {
       scoreLetters(guess[charPosInGuess], charPosInGuess, ":g");
+      scoreKeyboard(guess[charPosInGuess], ":g");
       removeLetter(guess[charPosInGuess]);
       console.log("called checkForGreenLetters");
     }
@@ -131,6 +135,7 @@ function checkForYellowLetters(chosenWord, guess) {
     for (let  charPosInGuess= 0; charPosInGuess < guess.length; charPosInGuess++) {
       if ( (guess[charPosInGuess] == chosenWord[charPosInChosenWord]) && hasIndexBeenScored(charPosInGuess) == false && (isLetterPresent(guess[charPosInGuess]) == true) ) {
         scoreLetters(guess[charPosInGuess], charPosInGuess, ":y");
+        scoreKeyboard(guess[charPosInGuess], ":y");
         removeLetter(guess[charPosInGuess]);
         console.log("called checkForYellowLetters")
       }
@@ -152,7 +157,31 @@ function scoreLetters(letter: string, position: Number, color: string) {
   indexesToBeScoredIncrement++;
 }
 
+function scoreKeyboard(letter: string, color: string) {
+  if (color == ":g" &&
+  checkIfKeyboardScored(letter, "green")) {
+    greenLetters.push(letter + color)
+  } else if (color == ":y" &&
+  checkIfKeyboardScored(letter, "yellow") == false &&
+  checkIfKeyboardScored(letter, "green") == false) {
+    yellowLetters.push(letter + color)
+  } else if (color == ":b" &&
+  checkIfKeyboardScored(letter, "black") == false &&
+  checkIfKeyboardScored(letter, "yellow") == false &&
+  checkIfKeyboardScored(letter, "green") == false) {
+    blackLetters.push(letter + color)
+  }
+}
 
+function checkIfKeyboardScored(letter: string, list: string) {
+  if (list == "green") {
+    return greenLetters.indexOf(letter) != -1
+  } else if (list == "yellow") {
+    return yellowLetters.indexOf(letter) != -1
+  } else if (list == "yellow") {
+    return blackLetters.indexOf(letter) != -1
+  }
+}
 //call on selection of number of letters
 
 export function startGame(numLetters: Number) {
@@ -197,6 +226,13 @@ export function doRound(guess: string, tiles: String[][], row: number): String[]
     //return arrMessWith(tiles, row, false, true);
     console.log("this was called");
   }
+  
+}
+
+
+// We don't really need an input
+
+export function colorKeyboard (letter, color) {
   
 }
 
