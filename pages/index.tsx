@@ -8,8 +8,9 @@ import {
   doRound,
   startGame,
   isGuessValid,
-  markInvalidGuess,
+  //markInvalidGuess,
   chosenWord,
+  colorKeyboard,
   //clearInvalidMarking,
   gameWon /*lettersToBeScored, indexesToBeScored*/,
 } from "../lib/filesearch";
@@ -48,6 +49,7 @@ export default function Home() {
   const [cols, setCols] = useState<undefined | number>(undefined);
   const [row, setRow] = useState(0); //current row the game is on
   const [tiles, setTiles] = useState<String[][]>([[], [], [], [], [], []]);
+  const [keyboard, setKeyboard] = useState(['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'z', 'x', 'c', 'v', 'b', 'n', 'm'])
 
 // need to fix a bug where the array destroys itself
 
@@ -161,10 +163,8 @@ export default function Home() {
                     : value2.endsWith(":y")
                     ? "bg-yellow-500"
                     : value2.endsWith(":b")
-                    ? "bg-neutral-700"
-                    : value2.endsWith(":r")
                     ? "bg-neutral-900"
-                    : "bg-neutral-900/75")
+                    : "bg-neutral-700/75")
                   + (cols > 8 ? " md:px-4 xl:px-8 " : "  md:px-8")
                 }
               >
@@ -182,45 +182,45 @@ export default function Home() {
           <div className="flex flex-col justify-center rounded-t-lg bg-neutral-900/50 border backdrop-blur-md border-white/5 pb-2 pt-6 px-1 md:px-6 w-full">
             <div className="grid gap-2 grid-cols-10 mb-2 w-full">
             {
-              "qwertyuiop".split("").map((value) => (
+              keyboard.filter((item, index) => index < 10).map((value) => (
                 <button
                   onClick={() => {handleGuess(value, size) }}
-                  key={value}
-                  className="rounded-lg text-center text-xl  md:text-3xl font-medium uppercase py-2 bg-neutral-900 hover:ring-1 transition duration-300  md:px-3"
-                >{value}</button>
+                  key={value.substring(0, 1)}
+                  className={"rounded-lg text-center text-xl  md:text-3xl font-medium uppercase py-2 hover:ring-1 transition duration-300  md:px-3 " + (value.substring(2, 3).toLowerCase() == "g" ? " bg-green-500" : value.substring(2, 3).toLowerCase() == "y" ? "bg-yellow-500" : value.substring(2, 3).toLowerCase() == "b" ? "bg-neutral-900" :"bg-neutral-800")} 
+                >{value.substring(0, 1)}</button>
               ))
             }
             </div>
             <div className="grid gap-2 grid-cols-9 mb-2 w-full">
             {
-              "asdfghjkl".split("").map((value) => (
+              keyboard.filter((item, index) => index < 19 && index > 9).map((value) => (
                 <button
                 onClick={() => handleGuess(value, size)}
-                  key={value}
-                  className="rounded-lg text-center text-xl  md:text-3xl font-medium uppercase py-2 bg-neutral-900 hover:ring-1 transition duration-300  md:px-3"
-                >{value}</button>
+                  key={value.substring(0, 1)}
+                  className={"rounded-lg text-center text-xl  md:text-3xl font-medium uppercase py-2 hover:ring-1 transition duration-300  md:px-3 " + (value.substring(2, 3).toLowerCase() == "g" ? " bg-green-500" : value.substring(2, 3).toLowerCase() == "y" ? "bg-yellow-500" : value.substring(2, 3).toLowerCase() == "b" ? "bg-neutral-900" :"bg-neutral-800")}
+                >{value.substring(0, 1)}</button>
               ))
             }
             </div>
             <div className="grid gap-2 grid-cols-7 mb-2 w-full">
             {
-              "zxcvbnm".split("").map((value) => (
+              keyboard.filter((item, index) => index < 26 && index > 18).map((value) => (
                 <button
                 onClick={() => handleGuess(value, size)}
-                  key={value}
-                  className="rounded-lg text-center text-xl  md:text-3xl font-medium uppercase py-2 bg-neutral-900 hover:ring-1 transition duration-300  md:px-3"
-                >{value}</button>
+                  key={value.substring(0, 1)}
+                  className={"rounded-lg text-center text-xl  md:text-3xl font-medium uppercase py-2 hover:ring-1 transition duration-300  md:px-3 " + (value.substring(2, 3).toLowerCase() == "g" ? " bg-green-500" : value.substring(2, 3).toLowerCase() == "y" ? "bg-yellow-500" : value.substring(2, 3).toLowerCase() == "b" ? "bg-neutral-900" :"bg-neutral-800")}
+                >{value.substring(0, 1)}</button>
               ))
             }
             </div>
             <div className="grid grid-cols-2 gap-2">
             <button
                   onClick={() => {console.log(size, myRow, "|"), handleGuess("Return", size, myRow)}}
-                  className="rounded-lg text-center text-xl md:text-3xl font-medium uppercase py-1  px-3 hover:ring-1 transition duration-300 bg-neutral-900 border-white/5"
+                  className="rounded-lg text-center text-xl md:text-3xl font-medium uppercase py-1  px-3 hover:ring-1 transition duration-300 bg-neutral-800 border-white/5"
                 >Enter</button>
                 <button
                   onClick={() => {handleGuess("Backspace", size)}}
-                  className="rounded-lg text-center text-xl md:text-3xl font-medium uppercase  md:px-3 hover:ring-1 transition duration-300 bg-neutral-900 border-white/5"
+                  className="rounded-lg text-center text-xl md:text-3xl font-medium uppercase  md:px-3 hover:ring-1 transition duration-300 bg-neutral-800 border-white/5"
                 >Backspace</button>
             </div>
           </div>
@@ -232,6 +232,22 @@ export default function Home() {
     </>
   );
 
+
+  /*function colorKeyboard (arr: string[]) {
+    let newarr = [];
+    arr.forEach(elm => {
+      if (elm == "a") {
+        newarr.push("a:g")
+      } else {
+        newarr.push(elm)
+      }
+    })
+    return (newarr)
+  }*/
+
+  //so you want me to use this thing here?
+
+  //LUKAS
   function handleGuess(inputtedLetter: string, handleGuess_size: number, handleGuess_row?: number) {
     
     console.log(inputtedLetter, handleGuess_size, handleGuess_row);
@@ -278,6 +294,8 @@ export default function Home() {
       console.log(r, myRow);
       const t = doRound(r.join(""), tiles, myRow);
       setTiles(t);
+      setKeyboard(colorKeyboard(keyboard))
+      console.log(keyboard)
       console.log(t);
       console.log(myRow);
       newRow(myRow + 1);

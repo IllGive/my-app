@@ -143,6 +143,20 @@ function checkForYellowLetters(chosenWord, guess) {
   }
 }
 
+function indexHasBeenScored(index: number) {
+  return (indexesToBeScored.indexOf(index) != -1);
+}
+
+function checkBlackLetters(guess) {
+  for (let i = 0; i < guess.length; i++) {
+    if (!indexHasBeenScored(i)) {
+      scoreLetters(guess[i], i, ":b");
+      scoreKeyboard(guess[i], ":b")
+      removeLetter(guess[i]);
+    }
+  }
+}
+
 function scoreLetters(letter: string, position: Number, color: string) {
     
   //somehow i need to be able to set these tiles
@@ -158,8 +172,7 @@ function scoreLetters(letter: string, position: Number, color: string) {
 }
 
 function scoreKeyboard(letter: string, color: string) {
-  if (color == ":g" &&
-  checkIfKeyboardScored(letter, "green")) {
+  if (color == ":g") {
     greenLetters.push(letter + color)
   } else if (color == ":y" &&
   checkIfKeyboardScored(letter, "yellow") == false &&
@@ -174,11 +187,12 @@ function scoreKeyboard(letter: string, color: string) {
 }
 
 function checkIfKeyboardScored(letter: string, list: string) {
+  console.log("tried checkIfKeyboardScored");
   if (list == "green") {
     return greenLetters.indexOf(letter) != -1
   } else if (list == "yellow") {
     return yellowLetters.indexOf(letter) != -1
-  } else if (list == "yellow") {
+  } else if (list == "black") {
     return blackLetters.indexOf(letter) != -1
   }
 }
@@ -193,13 +207,6 @@ export function startGame(numLetters: Number) {
   chosenWord = getRandomWord(possibleWords)//.toLowerCase;
 }
 
-// function win(squares, row) {
-//   for (let i = 0; i < indexesToBeScored.length; i++) {
-//     squares[row][indexesToBeScored[i]] = lettersToBeScored[i];
-//   }
-//   squares[row].push("won")
-//   return squares;
-// }
 
 //call on valid guess entered
 export function doRound(guess: string, tiles: String[][], row: number): String[][] {
@@ -213,6 +220,7 @@ export function doRound(guess: string, tiles: String[][], row: number): String[]
     emptyScoredLetters();
     checkForGreenLetters(chosenWord, guess);
     checkForYellowLetters(chosenWord, guess);
+    checkBlackLetters(guess);
     console.log(tries);
     console.log(chosenWord, guess);
     if (gameWon == true) {
@@ -232,8 +240,26 @@ export function doRound(guess: string, tiles: String[][], row: number): String[]
 
 // We don't really need an input
 
-export function colorKeyboard (letter, color) {
-  
+export function colorKeyboard (arr: string[]) {
+  console.log(greenLetters);
+  console.log("color keyboard called");
+  let newArr = []; //You not writing to this
+  arr.forEach(elm => { //camelCase not PascalCase!
+    if (greenLetters.includes(elm + ":g")) {
+      console.log("green Letter should be colored");
+      newArr.push(elm + ":g"); //doesn't work this way, use push to add to the array
+    } else if (yellowLetters.includes(elm + ":y")) {
+      console.log("yellow Letter should be colored");
+      newArr.push(elm + ":y");
+    } else if (blackLetters.includes(elm + ":b")) {
+      console.log("black Letter should be colored");
+      newArr.push(elm + ":b");
+    } else {
+      newArr.push(elm)
+    }
+      
+  }); 
+  return (newArr)
 }
 
 
