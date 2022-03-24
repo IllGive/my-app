@@ -66,7 +66,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Bordle: Bills Wordle</title>
+        <title>Bordle: Bills Wordle</title> 
         <meta name="description" content="Because I thought that this was going to be easier" />
         <link
           rel="apple-touch-icon"

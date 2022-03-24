@@ -22,25 +22,15 @@ let yellowLetters: Array<string> = [];
 let blackLetters: Array<string> = [];
 
 
-// I need to take in guesses                          MOSTLY DONE
-// I need to check for validity on guess input        DONE?
-// I need the array to behave properly                MOSTLY DONE
-// I need to be able to color the squares
-// I need to fix this .length problem
-
-
-
-// function sortWordsByLength(length: Number) {
-//   possibleWords = words.filter ( (words, index, arr) => {
-//     arr[index + 1] += ' extra'
-//     console.log("sortWordByLength works");
-//     return words.length == length;
-//   })
-// }
-
 function getRandomWord(inputWords) {
   return inputWords[Math.floor(Math.random() * inputWords.length)];
 }
+
+/*
+function getDailyWord(inputWords) {
+  
+}
+*/
 
 function refillUnscoredLetters(chosenWord) {
   // for (let charInWord = 0; charInWord < chosenWord.length; charInWord++) {
@@ -85,12 +75,6 @@ export function markInvalidGuess (v: String[][], row: number, markOrErase: boole
   }
   return v;
 }
-
-// export function clearInvalidMarking (v: String[][], row: number) {
-//   for (let charPosInGuess = 0; charPosInGuess < v[row].length; charPosInGuess++) {
-//     v[row][charPosInGuess] = v[row][charPosInGuess][0];
-//   }
-// }
 
 function emptyScoredLetters() {
   indexesToBeScored.splice(0, 100);
@@ -196,8 +180,7 @@ function checkIfKeyboardScored(letter: string, list: string) {
     return blackLetters.indexOf(letter) != -1
   }
 }
-//call on selection of number of letters
-
+//call on selection of number of letters.
 export function startGame(numLetters: Number) {
   //gets the random word
   //chosenWord = getRandomWord(sortWordsByLength(numLetters));
@@ -205,9 +188,12 @@ export function startGame(numLetters: Number) {
     return Element.length == numLetters;
   })
   chosenWord = getRandomWord(possibleWords)//.toLowerCase;
+  /*
+  else if (gameMode == "daily") {
+    chosenWord = getDailyWord(possibleWords);
+  }
+  */
 }
-
-
 //call on valid guess entered
 export function doRound(guess: string, tiles: String[][], row: number): String[][] {
 
@@ -236,10 +222,7 @@ export function doRound(guess: string, tiles: String[][], row: number): String[]
   }
   
 }
-
-
-// We don't really need an input
-
+//call on valid guess entered.
 export function colorKeyboard (arr: string[]) {
   console.log(greenLetters);
   console.log("color keyboard called");
@@ -262,46 +245,5 @@ export function colorKeyboard (arr: string[]) {
   return (newArr)
 }
 
-
-/*
-function colorLetters(guess, selectedWord) {
-    for (let i = 0; i < numLetters; i++) {
-      let letterShouldBeYellow = false;
-      for (let j = 0; j < numLetters; j++) {
-        if (guess[i] == selectedWord[j]) {
-          letterShouldBeYellow = true;
-        }
-      }
-      if (guess[i] == selectedWord[i]) {
-        //code to make letter green goes here
-      }else if (letterShouldBeYellow == true) {
-        //code to make letter yellow goes here
-      }else {
-        //code to do nothing goes here
-      }
-    }
-}
-
-function turn(possibleWords, guess) {
-    //guess = 
-    if (possibleWords.findIndex(guess) != -1) {
-      colorLetters(guess, selectedWord);
-    }
-}
-
-prepareArray();
-getNumLetters();
-sortWordsByLength(numLetters, textByLine);
-getRandomWord(possibleWords);
-getGuess();
-turn(possibleWords, guess);
-
-
-
-
-
-
-
-*////////// 
 
 
