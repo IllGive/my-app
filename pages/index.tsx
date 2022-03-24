@@ -184,7 +184,7 @@ export default function Home() {
             {
               keyboard.filter((item, index) => index < 10).map((value) => (
                 <button
-                  onClick={() => {handleGuess(value, size) }}
+                  onClick={() => {handleGuess(value.substring(0, 1), size) }}
                   key={value.substring(0, 1)}
                   className={"rounded-lg text-center text-xl  md:text-3xl font-medium uppercase py-2 hover:ring-1 transition duration-300  md:px-3 " + (value.substring(2, 3).toLowerCase() == "g" ? " bg-green-500" : value.substring(2, 3).toLowerCase() == "y" ? "bg-yellow-500" : value.substring(2, 3).toLowerCase() == "b" ? "bg-neutral-900" :"bg-neutral-800")} 
                 >{value.substring(0, 1)}</button>
@@ -195,7 +195,7 @@ export default function Home() {
             {
               keyboard.filter((item, index) => index < 19 && index > 9).map((value) => (
                 <button
-                onClick={() => handleGuess(value, size)}
+                onClick={() => handleGuess(value.substring(0, 1), size)}
                   key={value.substring(0, 1)}
                   className={"rounded-lg text-center text-xl  md:text-3xl font-medium uppercase py-2 hover:ring-1 transition duration-300  md:px-3 " + (value.substring(2, 3).toLowerCase() == "g" ? " bg-green-500" : value.substring(2, 3).toLowerCase() == "y" ? "bg-yellow-500" : value.substring(2, 3).toLowerCase() == "b" ? "bg-neutral-900" :"bg-neutral-800")}
                 >{value.substring(0, 1)}</button>
@@ -206,7 +206,7 @@ export default function Home() {
             {
               keyboard.filter((item, index) => index < 26 && index > 18).map((value) => (
                 <button
-                onClick={() => handleGuess(value, size)}
+                onClick={() => handleGuess(value.substring(0, 1), size)}
                   key={value.substring(0, 1)}
                   className={"rounded-lg text-center text-xl  md:text-3xl font-medium uppercase py-2 hover:ring-1 transition duration-300  md:px-3 " + (value.substring(2, 3).toLowerCase() == "g" ? " bg-green-500" : value.substring(2, 3).toLowerCase() == "y" ? "bg-yellow-500" : value.substring(2, 3).toLowerCase() == "b" ? "bg-neutral-900" :"bg-neutral-800")}
                 >{value.substring(0, 1)}</button>
