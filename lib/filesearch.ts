@@ -1,11 +1,22 @@
 import { Input } from "postcss";
 import { words } from "./words";
 import { refinedWords } from "./refinedWords";
+import { Srand, choice, seed } from 'seeded-rand';
 //import { tiles, setTiles, row } from "/Users/bigchungus/my-app/pages/index";
 //import { guess } from "./index";
 
 //var numLetters;
 //let guess;
+
+// const today = new Date();
+// const dd = String(today.getDate()).padStart(2, '0');
+// const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+// const yyyy = today.getFullYear();
+
+// const dateSeed = dd + mm + yyyy;
+
+// Srand.seed(25032022);
+// console.log(dateSeed);
 var possibleWords: unknown;
 //var textByLine;
 var unscoredLetters: Array<string> = [];
@@ -22,13 +33,18 @@ let yellowLetters: Array<string> = [];
 let blackLetters: Array<string> = [];
 
 
-function getRandomWord(inputWords) {
-  return inputWords[Math.floor(Math.random() * inputWords.length)];
+function getRandomWord(inputWords, dailyMode: boolean) {
+  if (!dailyMode) {
+    return inputWords[Math.floor(Math.random() * inputWords.length)];
+  } else if (dailyMode)  {
+    return choice(inputWords)
+  }
+ 
 }
 
 /*
 function getDailyWord(inputWords) {
-  
+
 }
 */
 
@@ -187,7 +203,7 @@ export function startGame(numLetters: Number) {
   possibleWords = refinedWords.filter((Element) => {
     return Element.length == numLetters;
   })
-  chosenWord = getRandomWord(possibleWords)//.toLowerCase;
+  chosenWord = getRandomWord(possibleWords, false)//.toLowerCase;
   /*
   else if (gameMode == "daily") {
     chosenWord = getDailyWord(possibleWords);
