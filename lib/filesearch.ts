@@ -1,33 +1,25 @@
 import { Input } from "postcss";
 import { words } from "./words";
 import { refinedWords } from "./refinedWords";
-import { Srand, choice, seed } from 'seeded-rand';
-//import { tiles, setTiles, row } from "/Users/bigchungus/my-app/pages/index";
-//import { guess } from "./index";
+import Randoma from 'randoma';
 
-//var numLetters;
-//let guess;
 
-// const today = new Date();
-// const dd = String(today.getDate()).padStart(2, '0');
-// const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-// const yyyy = today.getFullYear();
+const today = new Date();
+const dd = String(today.getDate()).padStart(2, '0');
+const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+const yyyy = today.getFullYear();
 
-// const dateSeed = dd + mm + yyyy;
-
-// Srand.seed(25032022);
-// console.log(dateSeed);
-var possibleWords: unknown;
-//var textByLine;
-var unscoredLetters: Array<string> = [];
+//const dateSeed = dd + mm + yyyy;
+const dateSeed = 27032022;
+console.log(dateSeed);
 export let gameWon: boolean = false;
-let tries: number = 6;
-//let testOutput: Array<string>;
 export let chosenWord: string;
+var possibleWords: unknown;
+let tries: number = 6;
+let indexesToBeScoredIncrement: Number;
+var unscoredLetters: Array<string> = [];
 let indexesToBeScored: Array<number> = [];
 let lettersToBeScored: Array<string> = [];
-//export let charsOnKeyboard: Array<string> = []; 
-let indexesToBeScoredIncrement: Number;
 let greenLetters: Array<string> = [];
 let yellowLetters: Array<string> = [];
 let blackLetters: Array<string> = [];
@@ -37,16 +29,11 @@ function getRandomWord(inputWords, dailyMode: boolean) {
   if (!dailyMode) {
     return inputWords[Math.floor(Math.random() * inputWords.length)];
   } else if (dailyMode)  {
-    return choice(inputWords)
+    return (new Randoma({seed: dateSeed}).arrayItem(inputWords));
+    
   }
  
 }
-
-/*
-function getDailyWord(inputWords) {
-
-}
-*/
 
 function refillUnscoredLetters(chosenWord) {
   // for (let charInWord = 0; charInWord < chosenWord.length; charInWord++) {
@@ -197,13 +184,13 @@ function checkIfKeyboardScored(letter: string, list: string) {
   }
 }
 //call on selection of number of letters.
-export function startGame(numLetters: Number) {
+export function startGame(numLetters: Number, usingDailyMode: boolean) {
   //gets the random word
   //chosenWord = getRandomWord(sortWordsByLength(numLetters));
   possibleWords = refinedWords.filter((Element) => {
     return Element.length == numLetters;
   })
-  chosenWord = getRandomWord(possibleWords, false)//.toLowerCase;
+  chosenWord = getRandomWord(possibleWords, usingDailyMode)//.toLowerCase;
   /*
   else if (gameMode == "daily") {
     chosenWord = getDailyWord(possibleWords);

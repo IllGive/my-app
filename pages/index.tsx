@@ -31,22 +31,25 @@ export default function Home() {
     const selectElement = document.querySelector("#numLetters");
     //@ts-expect-error
     const output = selectElement.value;
-    //console.log(output);
     size = output ?? 6;
     setCols(output);
+    //document.getElementById("selectMode").hidden = true;
     document.getElementById("dropDownMenu").hidden = true;
+    document.getElementById("dailyModeButton").hidden = true;
+    document.getElementById("infiniteModeButton").hidden = true;
     selectedValue = output;
-    startGame(output);
+    startGame(output, daily); //// RIGHT HERE
     setTimeout(function () {}, 10000);
   }
 
-  //var myRow = 0;
+  const [dailyMode, setDailyMode] = useState(false);
+  let daily: boolean = false;
   const [finished, setFinished] = useState(false);
   const [finishedfr, setFinishedfr] = useState(false);
   const [gameLost, setGameLost] = useState(false);
   const [gameLostfr, setGameLostfr] = useState(false);
   const [cols, setCols] = useState<undefined | number>(undefined);
-  const [row, setRow] = useState(0); //current row the game is on
+  const [row, setRow] = useState(0);
   const [tiles, setTiles] = useState<String[][]>([[], [], [], [], [], []]);
   const [invalidGuess, setInvalidGuess] = useState(false);
   const [keyboard, setKeyboard] = useState([
@@ -78,9 +81,6 @@ export default function Home() {
     "m",
   ]);
 
-  // need to fix a bug where the array destroys itself
-
-  // const test = [["a", "b", "c", "d", "e"], ["f", "g", "h", "i", "j"], ["K", "l", "m", "n", "o"]]
   useEffect(() => {
     window.addEventListener("keydown", (e) => {
       //console.log(e.key)
@@ -124,13 +124,14 @@ export default function Home() {
           content="/favicons/browserconfig.xml"
         />
         <meta name="theme-color" content="#ffffff" />
+
       </Head>
       <div className="bg-black h-screen text-gray-100 pt-10 px-2 md:px-10 relative">
         {/* Invalid Guess Button */}
       <div
-          id="invalidGuessMessage" className={
-            "inset-0 bg-white/5 absolute z-50 items-center justify-center hidden"// +
-            //(invalidGuess ? "" : "hidden")
+          className={
+            "inset-0 absolute z-50 items-center justify-center flex " +
+            (invalidGuess ? "" : "hidden")
           } 
         >
           <div className="rounded-lg bg-neutral-900 border backdrop-blur-md border-white/5 p-4 flex flex-col my-auto">
@@ -141,7 +142,8 @@ export default function Home() {
         </div>
         
         {/* End Of Invalid Guess Button */}
-
+        
+        {/* Win screen */}
         <div
           className={
             "inset-0 bg-white/5 backdrop-blur-sm absolute z-50 flex items-center justify-center " +
@@ -175,7 +177,10 @@ export default function Home() {
             </button>
           </div>
         </div>
+        
         {/* Surely I can just copy and paste this! */}
+
+        {/* Win screen */}
         <div
           className={
             "inset-0 bg-white/5 backdrop-blur-sm absolute z-50 flex items-center justify-center " +
@@ -209,6 +214,7 @@ export default function Home() {
             </button>
           </div>
         </div>
+          
         <div className="flex flex-col overflow-y-auto absolute {/*z-10 inset-0">
           <h1 className="text-7xl font-bold mx-auto mb-4 relative tracking-wider ">
             Bordle!
@@ -221,9 +227,16 @@ export default function Home() {
             }
           />
 
+          {/* Buttons for seelcting mode */}
+          <div id="selectMode" className="rounded-lg bg-neutral-900/75 mx-auto grid gap-2 grid-cols-2 ">
+            <div id="dailyModeButton" className={"cursor-pointer rounded-md bg-neutral-800 px-3 py-1 text-center " + (dailyMode ? "ring" : "")} onClick={() => {setDailyMode(true); daily = true}}>Daily</div>
+            <div id="infiniteModeButton" className={"cursor-pointer rounded-md bg-neutral-800 px-3 py-1 " + (dailyMode ? "" : "ring")} onClick={() => {setDailyMode(false); daily = false}}>Infinite</div>
+          </div>
+
+          {/* Selecting the number of Letters */}
           <div className="md:space-x-4 mx-auto " id="dropDownMenu">
             <label htmlFor="numLetters" className="text-gray-200 text-lg">
-              Choose how many letters you would like to play with:
+              Select how many letters you would like in your word:
             </label>
 
             <select
@@ -232,7 +245,7 @@ export default function Home() {
               onChange={() => getOption()}
               className="rounded py-1 bg-white/10 px-2 translate-x-2 focus:text-gray-900"
             >
-              <option value="">--Please choose an option--</option>
+              <option value="">How many letters would you like in your word?</option>
               {/*<option value="1">1 letter</option>*/}
               <option value="2">2 letters</option>
               <option value="3">3 letters</option>
@@ -246,10 +259,10 @@ export default function Home() {
               <option value="11">11 letters</option>
               <option value="12">12 letters</option>
             </select>
+            <p> When you have selected a number of letters, begin typing and your characters will appear below.</p>
           </div>
 
-          {/* <input id="txtInput1" type="text" /> */}
-          {/* We need to be able to easily change this grid-cols-5 value! */}
+          {/* Main grid for the word tiles */}
           <div
             className={
               "grid mx-auto w-full gap-1 md:gap-4 select-none grid-cols-" +
@@ -272,7 +285,7 @@ export default function Home() {
                         ? "bg-yellow-500"
                         : value2.endsWith(":b")
                         ? "bg-neutral-900"
-                        : "bg-neutral-700/75") +
+                        : "bg-neutral-600/75") +
                       (cols > 8 ? " md:px-4 xl:px-8 " : "  md:px-8")
                     }
                   >
@@ -298,13 +311,14 @@ export default function Home() {
           )}
           <div className="mb-72"></div>
         </div>
-        
+
+        {/* keyboard */}
         <div className="grid-cols-2 grid-cols-3 grid-cols-4 grid-cols-5 grid-cols-6 grid-cols-7 grid-cols-8 grid-cols-9 grid-cols-10 grid-cols-11 grid-cols-12"></div>
         {cols != undefined && finished != true ? (
           <div className="flex items-end justify-center">
-            <div className="absolute bottom-0 mx-2 asshole z-20 flex w-full max-w-2xl items-end select-none">
-              <div className="mt-auto mx-auto w-full px-6">
-                <div className="flex flex-col justify-center rounded-t-lg bg-neutral-900/75 border backdrop-blur-md border-white/5 pb-2 pt-6 px-1 md:px-6 w-full">
+            <div className="absolute bottom-0 asshole z-20 flex w-full max-w-2xl items-end select-none">
+              <div className="w-full">
+                <div className="flex flex-col justify-center rounded-t-lg bg-neutral-900/75 border backdrop-blur-md border-white/5 pb-2 pt-6 md:px-6 w-full">
                   <div className="grid gap-2 grid-cols-10 mb-2 w-full">
                     {keyboard
                       .filter((item, index) => index < 10)
@@ -322,7 +336,7 @@ export default function Home() {
                               ? "bg-yellow-500"
                               : value.substring(2, 3).toLowerCase() == "b"
                               ? "bg-neutral-900"
-                              : "bg-neutral-800")
+                              : "bg-neutral-600")
                           }
                         >
                           {value.substring(0, 1)}
@@ -346,7 +360,7 @@ export default function Home() {
                               ? "bg-yellow-500"
                               : value.substring(2, 3).toLowerCase() == "b"
                               ? "bg-neutral-900"
-                              : "bg-neutral-800")
+                              : "bg-neutral-600")
                           }
                         >
                           {value.substring(0, 1)}
@@ -370,7 +384,7 @@ export default function Home() {
                               ? "bg-yellow-500"
                               : value.substring(2, 3).toLowerCase() == "b"
                               ? "bg-neutral-900"
-                              : "bg-neutral-800")
+                              : "bg-neutral-600")
                           }
                         >
                           {value.substring(0, 1)}
@@ -383,7 +397,7 @@ export default function Home() {
                         console.log(size, myRow, "|"),
                           handleGuess("Return", size, myRow);
                       }}
-                      className="rounded-lg text-center text-xl md:text-3xl font-medium uppercase py-1  px-3 hover:ring-1 transition duration-300 bg-neutral-800 border-white/5"
+                      className="rounded-lg text-center text-xl md:text-3xl font-medium uppercase py-1  px-3 hover:ring-1 transition duration-300 bg-neutral-600 border-white/5"
                     >
                       Enter
                     </button>
@@ -391,7 +405,7 @@ export default function Home() {
                       onClick={() => {
                         handleGuess("Backspace", size);
                       }}
-                      className="rounded-lg text-center text-xl md:text-3xl font-medium uppercase  md:px-3 hover:ring-1 transition duration-300 bg-neutral-800 border-white/5"
+                      className="rounded-lg text-center text-xl md:text-3xl font-medium uppercase  md:px-3 hover:ring-1 transition duration-300 bg-neutral-600 border-white/5"
                     >
                       Backspace
                     </button>
@@ -495,11 +509,11 @@ export default function Home() {
       r.length == handleGuess_size &&
       !isGuessValid(r.join(""))
     ) {
-      //setInvalidGuess(true)
-      document.getElementById("invalidGuessMessage").hidden = true;
+      setInvalidGuess(true)
+      //document.getElementById("invalidGuessMessage").hidden = true;
       setTimeout(() => {
-        //setInvalidGuess(false)
-        document.getElementById("invalidGuessMessage").hidden = false;
+        setInvalidGuess(false)
+        //document.getElementById("invalidGuessMessage").hidden = false;
       }, 1000); //
     }
     console.log("ran through conditions in handleGuess");
