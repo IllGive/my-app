@@ -24,6 +24,7 @@ var myRow = 0;
 let selectedValue: number;
 let size: number /* | undefined = undefined*/;
 let gameState;
+let daily: boolean = false;
 
 export default function Home() {
   const router = useRouter();
@@ -33,7 +34,9 @@ export default function Home() {
     const output = selectElement.value;
     size = output ?? 6;
     setCols(output);
+    
     //document.getElementById("selectMode").hidden = true;
+    console.log(daily);
     document.getElementById("dropDownMenu").hidden = true;
     document.getElementById("dailyModeButton").hidden = true;
     document.getElementById("infiniteModeButton").hidden = true;
@@ -43,7 +46,6 @@ export default function Home() {
   }
 
   const [dailyMode, setDailyMode] = useState(false);
-  let daily: boolean = false;
   const [finished, setFinished] = useState(false);
   const [finishedfr, setFinishedfr] = useState(false);
   const [gameLost, setGameLost] = useState(false);
@@ -94,7 +96,6 @@ export default function Home() {
     <>
       <Head>
         <title>Bordle: Bills Wordle</title>
-        {console.log(invalidGuess)}
         <meta
           name="description"
           content="Because I thought that this was going to be easier"

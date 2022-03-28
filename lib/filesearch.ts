@@ -9,8 +9,8 @@ const dd = String(today.getDate()).padStart(2, '0');
 const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
 const yyyy = today.getFullYear();
 
-//const dateSeed = dd + mm + yyyy;
-const dateSeed = 27032022;
+const dateSeed = dd + mm + yyyy;
+//const dateSeed = 27032022;
 console.log(dateSeed);
 export let gameWon: boolean = false;
 export let chosenWord: string;
@@ -34,7 +34,6 @@ function getRandomWord(inputWords, dailyMode: boolean) {
   }
  
 }
-
 function refillUnscoredLetters(chosenWord) {
   // for (let charInWord = 0; charInWord < chosenWord.length; charInWord++) {
   //   unscoredLetters.push(chosenWord[charInWord]);
@@ -47,7 +46,6 @@ function refillUnscoredLetters(chosenWord) {
   }
   console.log(unscoredLetters);
 }
-
 export function arrMessWith(v: String[][], row: number, won: boolean, lost: boolean) {
   console.log("arrMessWith called");
   console.log(indexesToBeScored);
@@ -62,7 +60,6 @@ export function arrMessWith(v: String[][], row: number, won: boolean, lost: bool
   //console.log(v);
   return v;
 }
-
 export function markInvalidGuess (v: String[][], row: number, markOrErase: boolean) {
   if (markOrErase) {
     for (let charPosInGuess = 0; charPosInGuess < v[row].length; charPosInGuess++) {
@@ -78,32 +75,26 @@ export function markInvalidGuess (v: String[][], row: number, markOrErase: boole
   }
   return v;
 }
-
 function emptyScoredLetters() {
   indexesToBeScored.splice(0, 100);
   lettersToBeScored.splice(0, 100);
   indexesToBeScoredIncrement = 0;
 }
-
 export function isGuessValid(guess) {
   console.log(words.indexOf(guess));
   return (words.indexOf(guess) != -1);
 }
-
 function isLetterPresent(letter): boolean {
   return (unscoredLetters.indexOf(letter) != -1)
 }
-
 function hasIndexBeenScored (index): boolean {
   return (indexesToBeScored.indexOf(index) != -1);
 }
-
 function removeLetter(letter) {
   unscoredLetters.splice(unscoredLetters.indexOf(letter), 1)
   console.log(unscoredLetters);
   console.log("a letter has been removed");
 }
-
 function checkForGreenLetters(chosenWord, guess) {
   console.log("tried checkForGreenLetters")
   for (let charPosInGuess = 0; charPosInGuess < guess.length; charPosInGuess++) {
@@ -115,7 +106,6 @@ function checkForGreenLetters(chosenWord, guess) {
     }
   }
 }
-
 function checkForYellowLetters(chosenWord, guess) {
   console.log("tried checkForYellowLetters")
   for (let charPosInChosenWord = 0; charPosInChosenWord < chosenWord.length; charPosInChosenWord++) {
@@ -129,11 +119,9 @@ function checkForYellowLetters(chosenWord, guess) {
     }
   }
 }
-
 function indexHasBeenScored(index: number) {
   return (indexesToBeScored.indexOf(index) != -1);
 }
-
 function checkBlackLetters(guess) {
   for (let i = 0; i < guess.length; i++) {
     if (!indexHasBeenScored(i)) {
@@ -143,7 +131,6 @@ function checkBlackLetters(guess) {
     }
   }
 }
-
 function scoreLetters(letter: string, position: Number, color: string) {
     
   //somehow i need to be able to set these tiles
@@ -157,7 +144,6 @@ function scoreLetters(letter: string, position: Number, color: string) {
   //@ts-ignore
   indexesToBeScoredIncrement++;
 }
-
 function scoreKeyboard(letter: string, color: string) {
   if (color == ":g") {
     greenLetters.push(letter + color)
@@ -172,7 +158,6 @@ function scoreKeyboard(letter: string, color: string) {
     blackLetters.push(letter + color)
   }
 }
-
 function checkIfKeyboardScored(letter: string, list: string) {
   console.log("tried checkIfKeyboardScored");
   if (list == "green") {
