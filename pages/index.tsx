@@ -129,7 +129,7 @@ export default function Home() {
       </Head>
       <div className="bg-black h-screen text-gray-100 pt-10 px-2 md:px-10 relative">
         {/* Invalid Guess Button */}
-      <div
+        <div
           className={
             "inset-0 absolute z-50 items-center justify-center flex " +
             (invalidGuess ? "" : "hidden")
@@ -141,8 +141,6 @@ export default function Home() {
             </h2>
           </div>
         </div>
-        
-        {/* End Of Invalid Guess Button */}
         
         {/* Win screen */}
         <div
@@ -179,9 +177,7 @@ export default function Home() {
           </div>
         </div>
         
-        {/* Surely I can just copy and paste this! */}
-
-        {/* Win screen */}
+        {/* Lose screen */}
         <div
           className={
             "inset-0 bg-white/5 backdrop-blur-sm absolute z-50 flex items-center justify-center " +
@@ -217,25 +213,27 @@ export default function Home() {
         </div>
           
         <div className="flex flex-col overflow-y-auto absolute {/*z-10 inset-0">
+
+          {/* Title and that strange bar thing */}
           <h1 className="text-7xl font-bold mx-auto mb-4 relative tracking-wider ">
             Bordle!
           </h1>
           {/* I was thinking that perhaps either side of the bar, we could put the number of letters */}
           <hr
             className={
-              "w-36 border-t-2  mx-auto mb-6 " +
+              "w-36 border-t-2  mx-auto mb-4 " +
               (cols ? "border-green-500" : "border-blue-500")
             }
           />
 
-          {/* Buttons for seelcting mode */}
+          {/* Buttons for selecting mode */}
           <div id="selectMode" className="rounded-lg bg-neutral-900/75 mx-auto grid gap-2 grid-cols-2 ">
             <div id="dailyModeButton" className={"cursor-pointer rounded-md bg-neutral-800 px-3 py-1 text-center " + (dailyMode ? "ring" : "")} onClick={() => {setDailyMode(true); daily = true}}>Daily</div>
             <div id="infiniteModeButton" className={"cursor-pointer rounded-md bg-neutral-800 px-3 py-1 " + (dailyMode ? "" : "ring")} onClick={() => {setDailyMode(false); daily = false}}>Infinite</div>
           </div>
 
           {/* Selecting the number of Letters */}
-          <div className="md:space-x-4 mx-auto " id="dropDownMenu">
+          <div className="md:space-x-4 mx-auto m-2 " id="dropDownMenu">
             <label htmlFor="numLetters" className="text-gray-200 text-lg">
               Select how many letters you would like in your word:
             </label>
@@ -298,7 +296,7 @@ export default function Home() {
             {/*console.log(tiles)*/}
           </div>
           
-          
+          {/* Play Again button */}
 
           {finishedfr || gameLostfr ? (
             <button
@@ -422,21 +420,6 @@ export default function Home() {
     </>
   );
 
-  /*function colorKeyboard (arr: string[]) {
-    let newarr = [];
-    arr.forEach(elm => {
-      if (elm == "a") {
-        newarr.push("a:g")
-      } else {
-        newarr.push(elm)
-      }
-    })
-    return (newarr)
-  }*/
-
-  //so you want me to use this thing here?
-
-  //LUKAS
   function handleGuess(
     inputtedLetter: string,
     handleGuess_size: number,
@@ -524,12 +507,6 @@ export default function Home() {
     setTiles(test);
     //console.log(tiles);
   }
-
-  // Egregious violation of DRY, but here we go:
-
-  // function handleGuessOnScreen (inputtedLetter: string; size: number) {
-
-  // }
 
   function newRow(line: number) {
     setRow(line);
