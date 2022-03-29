@@ -221,7 +221,7 @@ export default function Home() {
           {/* I was thinking that perhaps either side of the bar, we could put the number of letters */}
           <hr
             className={
-              "w-36 border-t-2  mx-auto mb-4 " +
+              "w-36 border-t-2  mx-auto mb-5 " +
               (cols ? "border-green-500" : "border-blue-500")
             }
           />
@@ -233,7 +233,7 @@ export default function Home() {
           </div>
 
           {/* Selecting the number of Letters */}
-          <div className="md:space-x-4 mx-auto m-2 " id="dropDownMenu">
+          <div className="md:space-x-4 mx-auto m-3 " id="dropDownMenu">
             <label htmlFor="numLetters" className="text-gray-200 text-lg">
               Select how many letters you would like in your word:
             </label>
