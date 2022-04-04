@@ -21,6 +21,7 @@ import {
 //let guess: string;
 
 var myRow = 0;
+let tempKeyboard: Array<string> = [];
 let selectedValue: number;
 let size: number /* | undefined = undefined*/;
 let gameState;
@@ -36,7 +37,6 @@ export default function Home() {
     setCols(output);
     
     //document.getElementById("selectMode").hidden = true;
-    console.log(daily);
     document.getElementById("dropDownMenu").hidden = true;
     document.getElementById("dailyModeButton").hidden = true;
     document.getElementById("infiniteModeButton").hidden = true;
@@ -85,7 +85,6 @@ export default function Home() {
 
   useEffect(() => {
     window.addEventListener("keydown", (e) => {
-      //console.log(e.key)
       //if (gameState != "lost") return;
       handleGuess(e.key, size);
     });
@@ -293,7 +292,6 @@ export default function Home() {
                 )
               )
             )}
-            {/*console.log(tiles)*/}
           </div>
           
           {/* Play Again button */}
@@ -393,7 +391,6 @@ export default function Home() {
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       onClick={() => {
-                        console.log(size, myRow, "|"),
                           handleGuess("Return", size, myRow);
                       }}
                       className="rounded-lg text-center text-xl md:text-3xl font-medium uppercase py-1  px-3 hover:ring-1 transition duration-300 bg-neutral-600 border-white/5"
@@ -425,23 +422,14 @@ export default function Home() {
     handleGuess_size: number,
     handleGuess_row?: number
   ) {
-    console.log(inputtedLetter, handleGuess_size, handleGuess_row);
     if (handleGuess_row != undefined) {
       myRow = handleGuess_row;
     }
-    console.log("guess handled");
-    //if (handleGuess_size == undefined) return;
-
-    console.log(tiles, "handleguess");
     const test: String[][] = [];
     for (let i = 0; i < tiles.length; i++) {
       test.push(tiles[i]);
     }
-    console.log(myRow);
     let r = test[myRow];
-    console.log(test);
-    console.log(r);
-    console.log(handleGuess_size);
     // Removed || inputtedLetter == "Enter" because it could interfere with stuff
     if (
       inputtedLetter != "Backspace" &&
@@ -454,7 +442,6 @@ export default function Home() {
       r.length < handleGuess_size
     ) {
       r.push(inputtedLetter.toLowerCase());
-      console.log(r);
     } else if (inputtedLetter == "Backspace" || inputtedLetter == "Delete") {
       r.pop();
       // const t = markInvalidGuess(tiles, myRow, false)
@@ -464,21 +451,16 @@ export default function Home() {
       r.length == handleGuess_size &&
       isGuessValid(r.join(""))
     ) {
-      //console.log("worked");
-      console.log("Enter key detected");
-      console.log(r, myRow);
       const t = doRound(r.join(""), tiles, myRow);
       setTiles(t);
-      setKeyboard(colorKeyboard(keyboard));
-      console.log(keyboard);
-      console.log(t);
-      console.log(myRow);
+      for (let charOnKeyboard = 0; charOnKeyboard < 26; charOnKeyboard++) {
+        tempKeyboard.push(keyboard[charOnKeyboard].substring(0,1));
+      }
+      setKeyboard(colorKeyboard(tempKeyboard));
       newRow(myRow + 1);
-      console.log(myRow);
       gameState = t.pop()[0];
       if (gameState == "won") {
         setFinished(true);
-        console.log(finished);
         document.getElementById("displayWord_won").innerHTML =
           "Word: " + chosenWord;
       } else if (gameState == "lost") {
@@ -500,18 +482,12 @@ export default function Home() {
         //document.getElementById("invalidGuessMessage").hidden = false;
       }, 1000); //
     }
-    console.log("ran through conditions in handleGuess");
 
-    //console.log(y);
-    //test.push(r);
     setTiles(test);
-    //console.log(tiles);
   }
 
   function newRow(line: number) {
     setRow(line);
     myRow = line;
-    //console.log(line);
-    //console.log(row);
   }
 }
