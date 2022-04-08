@@ -257,7 +257,7 @@ export default function Home() {
               <option value="11">11 letters</option>
               <option value="12">12 letters</option>
             </select>
-            <p> When you have selected a number of letters, begin typing and your characters will appear below.</p>
+            {/* <p> When you have selected a number of letters, begin typing and your characters will appear below.</p> */}
           </div>
 
           {/* Main grid for the word tiles */}
