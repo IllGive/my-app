@@ -1,5 +1,34 @@
 //CSS AND HTML BY LUKAS
+//TS by Bill
+/*
+    CREDITS:
 
+    Answer word list: "3kwords.txt"
+    https://www.ef.edu/english-resources/english-vocabulary/top-3000-words/
+    I added some of my own words as well, and removed some (IllGive).
+
+    Bigger list of words: "refinedWords.txt"
+    http://www.gwicks.net/dictionaries.htm
+    I added and edited this list quite a bit, including comparing it against the list below:
+
+    Made a tool in C++ to check above list against the one below:
+    pretty sure I got it from here: https://www.freewebheaders.com/full-list-of-bad-words-banned-by-google/
+    Added to this list some proper nouns to check against: counties in England, Scotland, and Wales; countries of the world; and US states.
+    I also added some words from other languages that seem to make it onto these lists; names; and some more offensive words.
+
+    CODE:
+
+    Essentially all of the CSS and HTML (this file) was done by quick007 on GitHub.
+    The game logic and pruning the words lists/filtering is by IllGive.
+    Credits written by IllGive. Yes, I will take credit for writing the credits.
+
+    Inspiration:
+
+    Wordle, obviously.
+
+    Notes: I don't know how much I like web development over C++, but at least this is way better than python :).
+
+*/
 import Head from "next/head";
 import { useRouter } from "next/router";
 //import Image from "next/image";
